@@ -16,6 +16,8 @@
 
 package com.android.volley.toolbox;
 
+import android.text.TextUtils;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Request.Method;
@@ -48,6 +50,8 @@ import javax.net.ssl.SSLSocketFactory;
  * An {@link HttpStack} based on {@link HttpURLConnection}.
  */
 public class HurlStack implements HttpStack {
+
+    public static final String MULTI_HEADER_SEP = "!@#$%^&*()_+|~";
 
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
 
@@ -121,7 +125,7 @@ public class HurlStack implements HttpStack {
         }
         for (Entry<String, List<String>> header : connection.getHeaderFields().entrySet()) {
             if (header.getKey() != null) {
-                Header h = new BasicHeader(header.getKey(), header.getValue().get(0));
+                Header h = new BasicHeader(header.getKey(), TextUtils.join(MULTI_HEADER_SEP, header.getValue()));
                 response.addHeader(h);
             }
         }
