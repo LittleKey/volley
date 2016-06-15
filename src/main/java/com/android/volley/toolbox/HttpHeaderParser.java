@@ -16,6 +16,8 @@
 
 package com.android.volley.toolbox;
 
+import android.os.Build;
+
 import com.android.volley.Cache;
 import com.android.volley.NetworkResponse;
 
@@ -164,5 +166,17 @@ public class HttpHeaderParser {
      */
     public static String parseCharset(Map<String, String> headers) {
         return parseCharset(headers, HTTP.DEFAULT_CONTENT_CHARSET);
+    }
+
+    public static String[] parseSetCookie(Map<String, String> headers) {
+        String setCookies = headers.get("Set-Cookie");
+        if (setCookies == null) {
+            return new String[]{};
+        }
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.FROYO) {
+            // if use HUrlStack
+            return setCookies.split(HurlStack.MULTI_HEADER_SEP);
+        }
+        return new String[] {setCookies};
     }
 }
